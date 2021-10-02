@@ -17,13 +17,13 @@ export const tableDataReducer = (state = initialState, {type, payload}) => {
             return {
                 ...state, 
                 tableData: payload, 
-                loading: false
+                isLoading: false
             };
 
         case TABLE_DATA_ERROR:
             return {
-                loading: false, 
-                error: payload 
+                error: payload,
+                isLoading: false
             }    
        
         default:

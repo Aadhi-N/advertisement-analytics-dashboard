@@ -32,6 +32,7 @@ const Table = () => {
 
     return (
         <div className="ui grid container">
+            <h1>Points of Interest</h1>
             <TableComponent />
         </div>
     );
