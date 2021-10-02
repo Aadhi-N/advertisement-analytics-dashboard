@@ -1,0 +1,28 @@
+{
+    "name": "ws-product-nodejs16",
+    "version": "1.0.0",
+    "description": "eq-works-assessment",
+    "main": "index.js",
+    "dependencies": {
+      "body-parser": "^1.19.0",
+      "cors": "^2.8.5",
+      "dotenv": "^10.0.0",
+      "express": "^4.17.1",
+      "moment": "^2.29.1",
+      "pg": "^8.7.1",
+      "redis": "^3.1.2"
+    },
+    "devDependencies": {
+      "nodemon": "^2.0.12"
+    },
+    "engines": {
+      "node": "16.x"
+    },
+    "scripts": {
+      "start": "nodemon index.js",
+      "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Aadhi-N",
+    "license": "ISC"
+  }
+  
