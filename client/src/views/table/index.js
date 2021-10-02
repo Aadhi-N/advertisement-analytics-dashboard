@@ -6,7 +6,7 @@ import { TABLE_DATA_ERROR } from "../../actions/types";
 import TableComponent from "./TableComponent";
 
 
-const Table = ({ header, urlParams}) => {
+const Table = ({ dataKey, header, urlParams}) => {
 
     const dispatch = useDispatch();
 
@@ -19,7 +19,6 @@ const Table = ({ header, urlParams}) => {
     const fetchTableData = useCallback(async () => {
         try {
             const response = await axios.get(`http://localhost:5555/${urlParams}`);
-            console.log('RES', response.status)
             if (response.status === 200) {
                 dispatch(setTableData(response.data));
             } else {
@@ -32,7 +31,6 @@ const Table = ({ header, urlParams}) => {
     }, [urlParams, dispatch])
 
     useEffect(fetchTableData, [ urlParams, fetchTableData ]);
-
     
     return (
         tableDataError ? 
@@ -42,7 +40,7 @@ const Table = ({ header, urlParams}) => {
             (
                 <div className="ui grid container">
                     <h1>{header}</h1>
-                    <TableComponent urlParams={urlParams} />
+                    <TableComponent dataKey={dataKey} urlParams={urlParams} />
                 </div>
             )
     );

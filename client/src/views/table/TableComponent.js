@@ -2,10 +2,10 @@ import { useState, useEffect } from 'react';
 import { useSelector } from "react-redux";
 
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow } from '@material-ui/core';
-import { t } from "./tableFormat";
+import { columns } from "./tableFormat";
 
 
-export default function TableComponent( { urlParams }) {
+export default function TableComponent( { dataKey, urlParams }) {
     /* Configs for Material-UI table */
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -13,21 +13,16 @@ export default function TableComponent( { urlParams }) {
     /* Access redux store */
     const tableData = useSelector(state => state.tableData);
 
-    /* Data to populate table dynamically using tableFormat imports */
-    const [column, setColumn] = useState(null);
-    const [populateColumn, setPopulateColumn] = useState(null);
+    /* Format and map incoming data dynamically to Material-UI table using 'tableFormat' imports */   
     const [rows, setRows] = useState([]);
 
     useEffect(() => {
-      console.log('table', urlParams)
-    })
-
-    useEffect(() => {
-        let x = tableData.tableData.map((data) => {
-            return t.poi.populate(data.poi_id, data.name, data.lat, data.lon);
+        let formattedRows = tableData.tableData.map((data) => {
+            return columns[dataKey].format(data);
         });
-        setRows(x);
-    }, [tableData.tableData]);
+        
+        setRows(formattedRows);
+    }, [tableData.tableData, dataKey]);
 
   
     /* Pagination */
@@ -45,13 +40,12 @@ export default function TableComponent( { urlParams }) {
       tableData.error ? <p>{tableData.error.message}</p> : 
       (
         <>
-        {JSON.stringify(tableData.tableData, null, 2)}
         <Paper sx={{ width: '100%', overflow: 'hidden' }}>
           <TableContainer sx={{ maxHeight: 440 }}>
             <Table stickyHeader aria-label="sticky table">
               <TableHead>
                 <TableRow>
-                  {t.poi.head.map((column) => (
+                  {columns[dataKey].head.map((column) => (
                     <TableCell
                       key={column.id}
                       align={column.align}
@@ -68,7 +62,7 @@ export default function TableComponent( { urlParams }) {
                   .map((row) => {
                     return (
                       <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-                        {t.poi.head.map((column) => {
+                        {columns[dataKey].head.map((column) => {
                           const value = row[column.id];
                           return (
                             <TableCell key={column.id} align={column.align}>

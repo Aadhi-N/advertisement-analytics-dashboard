@@ -9,39 +9,6 @@ const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')))
 const Table = Loadable(lazy(() => import('views/table')));
 
 
-const routes = {
-    root: {
-        path: "/",
-        element: <DashboardDefault />
-    },
-    dashboard: {
-        path: "/dashboard/default",
-        element: <DashboardDefault />
-    },
-    table: {
-        all: {
-            path: "/data-table/all",
-            element: <Table header={"All Data"} urlParams={"all"} />,
-            params: "",
-        },
-        poi: {
-            path: "/data-table/poi",
-            element: <Table header={"Points of Interest"} urlParams={"poi"} />,
-            params: "",
-        },
-        stats: {
-            path: "/data-table/stats",
-            element: <Table header={"Stats"} urlParams={"stats/hourly"}/>,
-            params: "",
-        },
-        events: {
-            path: "/data-table/events",
-            element: <Table header={"Events"} urlParams={"events/hourly"} />,
-            params: "",
-        }
-    }
-};
-
 // ===========================|| MAIN ROUTING ||=========================== //
 
 const MainRoutes = {
@@ -49,28 +16,28 @@ const MainRoutes = {
     element: <MainLayout />,
     children: [
         {
-            path: routes.root.path,
-            element: routes.root.element
+            path: "/",
+            element: <DashboardDefault />
         },
         {
-            path: routes.dashboard.path,
-            element: routes.dashboard.element
+            path: "/dashboard/default",
+            element: <DashboardDefault />
         },
         {
-            path: routes.table.all.path,
-            element: routes.table.all.element
+            path: "/data-table/all",
+            element: <Table dataKey={"all"} header={"All Data"} urlParams={"all"} />,
         },
         {
-            path: routes.table.poi.path,
-            element: routes.table.poi.element
+            path: "/data-table/poi",
+            element: <Table dataKey={"poi"} header={"Points of Interest"} urlParams={"poi"} />,
         },
         {
-            path: routes.table.stats.path,
-            element: routes.table.stats.element
+            path: "/data-table/stats",
+            element: <Table dataKey={"stats"} header={"Stats"} urlParams={"stats/hourly"}/>,
         },
         {
-            path: routes.table.events.path,
-            element: routes.table.events.element
+            path: "/data-table/events",
+            element: <Table dataKey={"events"} header={"Events"} urlParams={"events/hourly"} />,
         },
     ]
 };
