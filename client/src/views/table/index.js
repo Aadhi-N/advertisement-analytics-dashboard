@@ -1,40 +1,50 @@
-import { useEffect } from "react";
+import { useEffect, useCallback } from "react";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { setTableData } from "../../actions/tableDataActions";
+import { setTableData, setTableDataError } from "../../actions/tableDataActions";
 import { TABLE_DATA_ERROR } from "../../actions/types";
 import TableComponent from "./TableComponent";
 
 
-const Table = () => {
-    const tableData = useSelector(state => state);
+const Table = ({ header, urlParams}) => {
+
     const dispatch = useDispatch();
 
-    const fetchTableData = async () => {
-        const response = await axios
-        // .get("https://jsonplaceholder.typicode.com/todos")
-        .get("http://localhost:5555/poi")
-        .catch((err) => {
-            dispatch( {
-                type: TABLE_DATA_ERROR,
-                payload: err,
-            })
-            console.log("Err", err);
-        });
-        dispatch(setTableData(response.data));
-    };
 
-  
+    /* Access redux store */
+    const tableDataError = useSelector(state => state.tableData.error);
 
-    useEffect(() => {
-        fetchTableData();
-    }, []);
+    /* useCallback hook used to memoize previously fetched resuts. 
+    When urlParams prop changes, function is called again to render Table component */
+    const fetchTableData = useCallback(async () => {
+        try {
+            const response = await axios.get(`http://localhost:5555/${urlParams}`);
+            console.log('RES', response.status)
+            if (response.status === 200) {
+                dispatch(setTableData(response.data));
+            } else {
+                dispatch(setTableDataError(response.status))
+            }
+        } catch (error) {
+            console.log("Error", error);
+            dispatch(setTableDataError(error))
+        }
+    }, [urlParams, dispatch])
 
+    useEffect(fetchTableData, [ urlParams, fetchTableData ]);
+
+    
     return (
-        <div className="ui grid container">
-            <h1>Points of Interest</h1>
-            <TableComponent />
-        </div>
+        tableDataError ? 
+            (
+                <h1>{tableDataError.message}</h1>
+            ) :
+            (
+                <div className="ui grid container">
+                    <h1>{header}</h1>
+                    <TableComponent urlParams={urlParams} />
+                </div>
+            )
     );
 };
 

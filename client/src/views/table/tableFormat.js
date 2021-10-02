@@ -1,60 +1,62 @@
-export const columnsPoi = [
-    { id: 'id', label: 'Poi_id', minWidth: 100 },
-    { id: 'name', label: 'Name', minWidth: 100 },
-    { id: 'lat', label: 'Lat', minWidth: 100 },
-    { id: 'lon', label: 'Lon', minWidth: 100 }
-];
-
-export function createPoiData(id, name, lat, lon) {
-    return { id, name, lat, lon };
+export const t = {
+    all: {
+        head: [
+            { id: 'id', label: 'Item', minWidth: 50 },
+            { id: 'date', label: 'Date', minWidth: 50 },
+            { id: 'hour', label: 'Hour', minWidth: 50 },
+            { id: 'impressions', label: 'Impressions', minWidth: 50 },
+            { id: 'clicks', label: 'Clicks', minWidth: 50 },
+            { id: 'revenue', label: 'Revenue', minWidth: 50 },
+            { id: 'events', label: 'Events', minWidth: 50 },
+            { id: 'poi_id', label: 'Poi_id', minWidth: 50 },
+            { id: 'name', label: 'Name', minWidth: 50 },
+            { id: 'lat', label: 'Lat', minWidth: 50 },
+            { id: 'lon', label: 'Lon', minWidth: 50 },
+        ],
+        populate: function(id, date, hour, impressions, clicks, revenue, events, poi_id, name, lat, lon) {
+            return { id, date, hour, impressions, clicks, revenue, events, poi_id, name, lat, lon };
+        }
+    },
+    poi: {
+        head: [
+            { id: 'id', label: 'Poi_id', minWidth: 100 },
+            { id: 'name', label: 'Name', minWidth: 100 },
+            { id: 'lat', label: 'Lat', minWidth: 100 },
+            { id: 'lon', label: 'Lon', minWidth: 100 }
+        ],
+        populate: function(id, name, lat, lon) {
+            return { id, name, lat, lon };
+        }
+    }
 };
 
+// export const columnsAllData = [
+//     { id: 'id', label: 'Item', minWidth: 50 },
+//     { id: 'date', label: 'Date', minWidth: 50 },
+//     { id: 'hour', label: 'Hour', minWidth: 50 },
+//     { id: 'impressions', label: 'Impressions', minWidth: 50 },
+//     { id: 'clicks', label: 'Clicks', minWidth: 50 },
+//     { id: 'revenue', label: 'Revenue', minWidth: 50 },
+//     { id: 'events', label: 'Events', minWidth: 50 },
+//     { id: 'poi_id', label: 'Poi_id', minWidth: 50 },
+//     { id: 'name', label: 'Name', minWidth: 50 },
+//     { id: 'lat', label: 'Lat', minWidth: 50 },
+//     { id: 'lon', label: 'Lon', minWidth: 50 },
+// ];
 
-export const columns = [
-    { id: 'name', label: 'Name', minWidth: 170 },
-    { id: 'code', label: 'ISO\u00a0Code', minWidth: 100 },
-    {
-      id: 'population',
-      label: 'Population',
-      minWidth: 170,
-      align: 'right',
-      format: (value) => value.toLocaleString('en-US'),
-    },
-    {
-      id: 'size',
-      label: 'Size\u00a0(km\u00b2)',
-      minWidth: 170,
-      align: 'right',
-      format: (value) => value.toLocaleString('en-US'),
-    },
-    {
-      id: 'density',
-      label: 'Density',
-      minWidth: 170,
-      align: 'right',
-      format: (value) => value.toFixed(2),
-    },
-  ];
-  
-  function createData(name, code, population, size) {
-    const density = population / size;
-    return { name, code, population, size, density };
-  }
-  
- export const rows = [
-    createData('India', 'IN', 1324171354, 3287263),
-    createData('China', 'CN', 1403500365, 9596961),
-    createData('Italy', 'IT', 60483973, 301340),
-    createData('United States', 'US', 327167434, 9833520),
-    createData('Canada', 'CA', 37602103, 9984670),
-    createData('Australia', 'AU', 25475400, 7692024),
-    createData('Germany', 'DE', 83019200, 357578),
-    createData('Ireland', 'IE', 4857000, 70273),
-    createData('Mexico', 'MX', 126577691, 1972550),
-    createData('Japan', 'JP', 126317000, 377973),
-    createData('France', 'FR', 67022000, 640679),
-    createData('United Kingdom', 'GB', 67545757, 242495),
-    createData('Russia', 'RU', 146793744, 17098246),
-    createData('Nigeria', 'NG', 200962417, 923768),
-    createData('Brazil', 'BR', 210147125, 8515767),
-  ];
+// export function createAllData(id, date, hour, impressions, clicks, revenue, events, poi_id, name, lat, lon) {
+//     return { id, date, hour, impressions, clicks, revenue, events, poi_id, name, lat, lon };
+// };
+
+// export const columnsPoi = [
+//     { id: 'id', label: 'Poi_id', minWidth: 100 },
+//     { id: 'name', label: 'Name', minWidth: 100 },
+//     { id: 'lat', label: 'Lat', minWidth: 100 },
+//     { id: 'lon', label: 'Lon', minWidth: 100 }
+// ];
+
+// export function createPoiData(id, name, lat, lon) {
+//     return { id, name, lat, lon };
+// };
+
+

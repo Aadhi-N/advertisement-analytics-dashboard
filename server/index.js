@@ -43,7 +43,7 @@ app.get('/events/daily', (req, res, next) => {
   return next()
 }, queryHandler);
 
-
+/////custom 
 app.get('/events/location', (req, res, next) => {
   req.sqlQuery = `
   SELECT date, i.poi_id, events
@@ -83,7 +83,6 @@ app.get('/stats/daily', (req, res, next) => {
 
 
 app.get('/poi', (req, res, next) => {
-  console.log('POIIIII')
   req.sqlQuery = `
     SELECT *
     FROM public.poi;
