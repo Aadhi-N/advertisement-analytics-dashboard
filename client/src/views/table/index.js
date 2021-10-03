@@ -10,7 +10,6 @@ const Table = ({ dataKey, header, urlParams}) => {
 
     const dispatch = useDispatch();
 
-
     /* Access redux store */
     const tableDataError = useSelector(state => state.tableData.error);
 

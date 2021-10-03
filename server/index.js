@@ -43,18 +43,6 @@ app.get('/events/daily', (req, res, next) => {
   return next()
 }, queryHandler);
 
-/////custom 
-app.get('/events/location', (req, res, next) => {
-  req.sqlQuery = `
-  SELECT date, i.poi_id, events
-  FROM public.hourly_events i
-  LEFT JOIN public.poi p ON p.poi_id = i.poi_id
-
-  LIMIT 168;
-  `
-  return next()
-}, queryHandler);
-
 
 app.get('/stats/hourly', (req, res, next) => {
   req.sqlQuery = `
@@ -86,6 +74,30 @@ app.get('/poi', (req, res, next) => {
   req.sqlQuery = `
     SELECT *
     FROM public.poi;
+  `
+  return next()
+}, queryHandler);
+
+
+
+// ===========================|| DASHBOARD CHART QUERIES ||=========================== //
+
+app.get('/dashboard/charts/clicks', (req, res, next) => {
+  req.sqlQuery = `
+    SELECT * FROM hourly_stats 
+    WHERE '2017-06-01' <= date and date < '2017-07-01';
+  `
+  return next();
+}, queryHandler)
+
+
+app.get('/events/location', (req, res, next) => {
+  req.sqlQuery = `
+  SELECT date, i.poi_id, events
+  FROM public.hourly_events i
+  LEFT JOIN public.poi p ON p.poi_id = i.poi_id
+
+  LIMIT 168;
   `
   return next()
 }, queryHandler);
@@ -151,3 +163,6 @@ process.on('unhandledRejection', (reason, p) => {
   console.log('Unhandled Rejection at: Promise', p, 'reason:', reason)
   process.exit(1)
 })
+
+
+

@@ -1,25 +1,26 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import { useCallback, useState } from "react";
+import { useSelector, useDispatch } from 'react-redux';
 
-// material-ui
+/* Material-UI Styles imports */
 import { makeStyles } from '@material-ui/styles';
 import { Avatar, Button, Grid, Typography } from '@material-ui/core';
 
-// third-party
+/* Charts imports */
 import Chart from 'react-apexcharts';
 
-// project imports
+/* Components imports */
 import MainCard from 'ui-component/cards/MainCard';
 import SkeletonTotalOrderCard from 'ui-component/cards/Skeleton/EarningCard';
 
+/* Chart data imports */
 import ChartDataMonth from './chart-data/total-order-month-line-chart';
 import ChartDataYear from './chart-data/total-order-year-line-chart';
 
-// assets
-import LocalMallOutlinedIcon from '@material-ui/icons/LocalMallOutlined';
-import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
+/* Assets imports */
+import MouseOutlined from '@material-ui/icons/MouseOutlined';
 
-// style constant
+/* Style constant */
 const useStyles = makeStyles((theme) => ({
     card: {
         backgroundColor: theme.palette.primary.dark,
@@ -66,11 +67,9 @@ const useStyles = makeStyles((theme) => ({
         padding: '20px !important'
     },
     avatar: {
-        ...theme.typography.commonAvatar,
-        ...theme.typography.largeAvatar,
         backgroundColor: theme.palette.primary[800],
         color: '#fff',
-        marginTop: '8px'
+        cursor: "default"
     },
     cardHeading: {
         fontSize: '2.125rem',
@@ -95,14 +94,17 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-// ===========================|| DASHBOARD - TOTAL ORDER LINE CHART CARD ||=========================== //
 
-const TotalOrderLineChartCard = ({ isLoading }) => {
+// ===========================|| DASHBOARD - TOTAL CLICKS LINE CHART CARD ||=========================== //
+
+const TotalClicksLineChartCard = ({ isLoading }) => {
     const classes = useStyles();
 
-    const [timeValue, setTimeValue] = React.useState(false);
-    const handleChangeTime = (event, newValue) => {
-        setTimeValue(newValue);
+    const [timeValue, setTimeValue] = useState("today");
+
+    const handleChangeTime = (e) => {
+        console.log(e.target.name)
+        setTimeValue(e.target.name);
     };
 
     return (
@@ -116,25 +118,36 @@ const TotalOrderLineChartCard = ({ isLoading }) => {
                             <Grid container justifyContent="space-between">
                                 <Grid item>
                                     <Avatar variant="rounded" className={classes.avatar}>
-                                        <LocalMallOutlinedIcon fontSize="inherit" />
+                                        <MouseOutlined fontSize="inherit" />
                                     </Avatar>
                                 </Grid>
                                 <Grid item>
                                     <Button
                                         disableElevation
-                                        variant={timeValue ? 'contained' : 'string'}
+                                        variant={timeValue === "today" ? 'contained' : 'string'}
                                         size="small"
-                                        onClick={(e) => handleChangeTime(e, true)}
+                                        name="today"
+                                        onClick={(e) => handleChangeTime(e)}
                                     >
-                                        Month
+                                        Today
                                     </Button>
                                     <Button
                                         disableElevation
-                                        variant={!timeValue ? 'contained' : 'string'}
+                                        variant={timeValue === "week" ? 'contained' : 'string'}
                                         size="small"
-                                        onClick={(e) => handleChangeTime(e, false)}
+                                        name="week"
+                                        onClick={(e) => handleChangeTime(e)}
                                     >
-                                        Year
+                                        This Week
+                                    </Button>
+                                    <Button
+                                        disableElevation
+                                        variant={timeValue === "month" ? 'contained' : 'string'}
+                                        size="small"
+                                        name="month"
+                                        onClick={(e) => handleChangeTime(e)}
+                                    >
+                                        This Month
                                     </Button>
                                 </Grid>
                             </Grid>
@@ -145,18 +158,14 @@ const TotalOrderLineChartCard = ({ isLoading }) => {
                                     <Grid container alignItems="center">
                                         <Grid item>
                                             {timeValue ? (
-                                                <Typography className={classes.cardHeading}>$108</Typography>
+                                                <Typography className={classes.cardHeading}>108</Typography>
                                             ) : (
-                                                <Typography className={classes.cardHeading}>$961</Typography>
+                                                <Typography className={classes.cardHeading}>961</Typography>
                                             )}
                                         </Grid>
-                                        <Grid item>
-                                            <Avatar className={classes.avatarCircle}>
-                                                <ArrowDownwardIcon fontSize="inherit" className={classes.circleIcon} />
-                                            </Avatar>
-                                        </Grid>
+                                        
                                         <Grid item xs={12}>
-                                            <Typography className={classes.subHeading}>Total Order</Typography>
+                                            <Typography className={classes.subHeading}>Total Clicks</Typography>
                                         </Grid>
                                     </Grid>
                                 </Grid>
@@ -172,8 +181,8 @@ const TotalOrderLineChartCard = ({ isLoading }) => {
     );
 };
 
-TotalOrderLineChartCard.propTypes = {
+TotalClicksLineChartCard.propTypes = {
     isLoading: PropTypes.bool
 };
 
-export default TotalOrderLineChartCard;
+export default TotalClicksLineChartCard;

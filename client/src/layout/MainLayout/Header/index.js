@@ -59,6 +59,8 @@ const Header = ({ handleLeftDrawerToggle }) => {
 
             <div className={classes.grow} />
             <div className={classes.grow} />
+            <h3>Friday, June 16th, 2017</h3>
+        
 
             {/* notification & profile */}
             <NotificationSection />

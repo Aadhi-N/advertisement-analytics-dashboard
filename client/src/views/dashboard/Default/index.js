@@ -1,12 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import axios from "axios";
 
-// material-ui
+import { daily, weekly, monthly } from "../../../reducers/clickChartDataReducer";
+
+/* Material-UI styles imports */
 import { Grid } from '@material-ui/core';
 
-// project imports
+/* Components imports */
 import EarningCard from './EarningCard';
 import PopularCard from './PopularCard';
-import TotalOrderLineChartCard from './TotalOrderLineChartCard';
+import TotalClicksLineChartCard from './TotalClicksLineChartCard';
 import TotalIncomeDarkCard from './TotalIncomeDarkCard';
 import TotalIncomeLightCard from './TotalIncomeLightCard';
 import TotalGrowthBarChart from './TotalGrowthBarChart';
@@ -20,6 +24,30 @@ const Dashboard = () => {
         setLoading(false);
     }, []);
 
+    const dispatch = useDispatch();
+
+    const today = useSelector(state => state.clickChartData);
+
+    console.log('daily', today)
+
+    const fetchDashboardData = useCallback(async () => {
+        try {
+            const promise1 = axios.get("http://localhost:5555/dashboard/charts/clicks");
+            const promise2 = axios.get("https://randomuser.me/api?page=2");
+            const promise3 = axios.get("https://randomuser.me/api?page=3");
+            
+            Promise.all([promise1, promise2, promise3]).then(function(response) {
+              dispatch(daily(response[0]));
+            });            
+        } catch (error) {
+            console.log('err')
+        }
+    }, []);
+
+    useEffect(() => {
+        fetchDashboardData();
+    })
+
     return (
         <Grid container spacing={gridSpacing}>
             <Grid item xs={12}>
@@ -28,7 +56,7 @@ const Dashboard = () => {
                         <EarningCard isLoading={isLoading} />
                     </Grid>
                     <Grid item lg={4} md={6} sm={6} xs={12}>
-                        <TotalOrderLineChartCard isLoading={isLoading} />
+                        <TotalClicksLineChartCard isLoading={isLoading} />
                     </Grid>
                     <Grid item lg={4} md={12} sm={12} xs={12}>
                         <Grid container spacing={gridSpacing}>
