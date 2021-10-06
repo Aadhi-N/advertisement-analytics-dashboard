@@ -17,7 +17,7 @@ const rateLimiter = (req, res, next) => {
         redisClient.get(req.ip, (err, record) => {
             if (err) throw err;
             const currentRequestTime = moment();
-            console.log("Record", record);
+            // console.log("Record", record);
 
             // If no record exists, create new record for user and store to Redis
             if (record === null) {
@@ -37,7 +37,7 @@ const rateLimiter = (req, res, next) => {
             let requestsWithinWindow = data.filter(entry => {
                 return entry.requestTimeStamp > windowStartTimestamp;
             });
-            console.log("RequestsWithinWindow: ", requestsWithinWindow);
+            // console.log("RequestsWithinWindow: ", requestsWithinWindow);
             let totalWindowRequestsCount = requestsWithinWindow.reduce((accumulator, entry) => {
                 return accumulator + entry.requestCount;
             }, 0);

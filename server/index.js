@@ -82,11 +82,39 @@ app.get('/poi', (req, res, next) => {
 
 // ===========================|| DASHBOARD CHART QUERIES ||=========================== //
 
-app.get('/dashboard/charts/clicks', (req, res, next) => {
-  req.sqlQuery = `
-    SELECT * FROM hourly_stats 
-    WHERE '2017-06-01' <= date and date < '2017-07-01';
-  `
+//monthly click results 
+app.get('/dashboard/charts/stats/total-clicks/:timeline', (req, res, next) => {
+  console.log('req', req.params);
+
+  switch (req.params.timeline) {
+    case "daily": 
+      req.sqlQuery = `
+        SELECT date, SUM(clicks) as sum_clicks
+        FROM hourly_stats
+        WHERE date = '2017-06-16'
+        GROUP BY hourly_stats.date;
+      `;
+      break;
+
+    case "weekly": 
+      req.sqlQuery = `
+        SELECT date, SUM(clicks) as sum_clicks
+        FROM hourly_stats
+        WHERE '2017-06-09' <= date and date < '2017-06-16'
+        GROUP BY hourly_stats.date;
+      `;
+      break;
+    case "monthly":
+      req.sqlQuery = `
+        SELECT date, SUM(clicks) as sum_clicks
+        FROM hourly_stats
+        WHERE '2017-06-01' <= date and date < '2017-07-01'
+        GROUP BY hourly_stats.date;
+      `;
+      break;
+    default: 
+      res.json({message: "Server error."})
+  };
   return next();
 }, queryHandler)
 

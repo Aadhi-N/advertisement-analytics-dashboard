@@ -3,6 +3,10 @@ import { createSlice } from '@reduxjs/toolkit';
 import { SET_CLICK_CHART_DATA, CLICK_CHART_DATA_ERROR } from "../actions/types";
 import { currentDate } from 'store/constant';
 
+// const daily = createAction('daily');
+// const weekly = createAction('weekly');
+// const monthly = createAction('monthly');
+
 // ===========================|| CLICK CHART DATA REDUCER ||=========================== //
 
 export const clickChartDataReducer = createSlice({
@@ -12,27 +16,48 @@ export const clickChartDataReducer = createSlice({
         isLoading: true
     },
     reducers: {
-        daily: (state, action) => {
-            var currentDate = new Date();
-            var firstday = new Date(currentDate.setDate(currentDate.getDate() - currentDate.getDay())).toUTCString();
-            var lastday = new Date(currentDate.setDate(currentDate.getDate() - currentDate.getDay() + 7)).toUTCString();
-            console.log(currentDate, firstday, lastday)
-            // const today = new Date();
-            // const firstDay = today.setDate(today.getDate() - today.getDay()).toUTCString();
-            // console.log('reducer', firstDay)
-            // return state.clickChartData;
+        daily: (state, { action, payload }) => {
+            return {
+                ...state, 
+                clickChartData: Number(payload[0].sum_clicks), 
+                isLoading: false
+            };
         },
-        weekly: state => {
-            console.log('this week', state.clickChartData);
-            return state;
+        weekly: (state, { action, payload }) => {
+
+            /* Sum the 'total_clicks' property in the array of objects */
+            const weeklyTotal = payload.reduce(function(prev, curr) {
+                return Number(prev) + Number(curr.sum_clicks);
+            }, 0);
+
+            return {
+                ...state, 
+                clickChartData: weeklyTotal ? weeklyTotal : payload, 
+                isLoading: false
+            };
         },
-        monthly: state => {
-            console.log('this month', state.clickChartData);
-            return state;
-        }
+        monthly: (state, { action, payload }) => {
+             /* Sum the 'total_clicks' property in the array of objects */
+             const monthlyTotal = payload.reduce(function(prev, curr) {
+                return Number(prev) + Number(curr.sum_clicks);
+            }, 0);
+
+            return {
+                ...state, 
+                clickChartData: monthlyTotal ? monthlyTotal : payload, 
+                isLoading: false
+            };
+        },
+        chartError: (error, { payload }) => {
+            return {
+                error: payload, 
+                isLoading: false
+            };
+        } 
     }
 })
 
 // Action creators are generated for each case reducer function
-export const { daily, weekly, monthly } = clickChartDataReducer.actions;
+// export const { daily, weekly, monthly, chartError } = clickChartDataReducer.actions;
+export const { actions } = clickChartDataReducer;
 export default clickChartDataReducer.reducer;

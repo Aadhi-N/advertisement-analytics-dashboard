@@ -2,7 +2,6 @@ import { useEffect, useCallback } from "react";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setTableData, setTableDataError } from "../../actions/tableDataActions";
-import { TABLE_DATA_ERROR } from "../../actions/types";
 import TableComponent from "./TableComponent";
 
 

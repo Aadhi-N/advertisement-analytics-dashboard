@@ -26,26 +26,26 @@ const Dashboard = () => {
 
     const dispatch = useDispatch();
 
-    const today = useSelector(state => state.clickChartData);
+    // const today = useSelector(state => state.clickChartData);
 
-    console.log('daily', today)
+    // console.log('daily', today)
 
-    const fetchDashboardData = useCallback(async () => {
-        try {
-            const promise1 = axios.get("http://localhost:5555/dashboard/charts/clicks");
-            const promise2 = axios.get("https://randomuser.me/api?page=2");
-            const promise3 = axios.get("https://randomuser.me/api?page=3");
+    // const fetchDashboardData = useCallback(async () => {
+    //     try {
+    //         const promise1 = axios.get("http://localhost:5555/dashboard/charts/clicks");
+    //         const promise2 = axios.get("https://randomuser.me/api?page=2");
+    //         const promise3 = axios.get("https://randomuser.me/api?page=3");
             
-            Promise.all([promise1, promise2, promise3]).then(function(response) {
-              dispatch(daily(response[0]));
-            });            
-        } catch (error) {
-            console.log('err')
-        }
-    }, []);
+    //         Promise.all([promise1, promise2, promise3]).then(function(response) {
+    //           dispatch(daily(response[0]));
+    //         });            
+    //     } catch (error) {
+    //         console.log('err')
+    //     }
+    // }, []);
 
     useEffect(() => {
-        fetchDashboardData();
+        // fetchDashboardData();
     })
 
     return (

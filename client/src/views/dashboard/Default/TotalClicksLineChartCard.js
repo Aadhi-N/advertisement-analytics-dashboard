@@ -1,6 +1,11 @@
 import PropTypes from 'prop-types';
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect} from "react";
 import { useSelector, useDispatch } from 'react-redux';
+// import { setClicksData, setClicksDataError } from "../../../actions/tableDataActions";
+// import { daily, weekly, monthly, chartError } from "../../../reducers/clickChartDataReducer";
+import { actions } from "../../../reducers/clickChartDataReducer";
+
+import axios from "axios";
 
 /* Material-UI Styles imports */
 import { makeStyles } from '@material-ui/styles';
@@ -94,24 +99,50 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
+const clicksUrl = "http://localhost:5555/dashboard/charts/stats/total-clicks/";
+
 
 // ===========================|| DASHBOARD - TOTAL CLICKS LINE CHART CARD ||=========================== //
 
 const TotalClicksLineChartCard = ({ isLoading }) => {
     const classes = useStyles();
 
-    const [timeValue, setTimeValue] = useState("today");
+    const [timeValue, setTimeValue] = useState("daily");
+
+    const dispatch = useDispatch();
+
+    /* Access redux store */
+    const totalClicks = useSelector(state => state.clickChartData.clickChartData);
+
+    /* useCallback hook used to memoize previously fetched resuts. 
+    When urlParams prop changes, function is called again to render Table component */
+    const fetchTableData = useCallback(async () => {
+        try {
+            const response = await axios.get(clicksUrl + timeValue);
+            if (response.status === 200) {
+                // Call action defined in clickChartDataReducer which matches current timeValue
+                dispatch(actions[timeValue](response.data))            
+            } else {
+                dispatch(actions.chartError(response.status))
+            }
+        } catch (error) {
+            dispatch(actions.chartError(error))
+        }
+    }, [timeValue, dispatch]);
+
+    useEffect(fetchTableData, [ timeValue, fetchTableData ]);
 
     const handleChangeTime = (e) => {
-        console.log(e.target.name)
         setTimeValue(e.target.name);
     };
-
+    
     return (
         <>
             {isLoading ? (
                 <SkeletonTotalOrderCard />
             ) : (
+                <>
+                {/* {JSON.stringify(totalClicks)} */}
                 <MainCard border={false} className={classes.card} contentClass={classes.content}>
                     <Grid container direction="column">
                         <Grid item>
@@ -124,27 +155,27 @@ const TotalClicksLineChartCard = ({ isLoading }) => {
                                 <Grid item>
                                     <Button
                                         disableElevation
-                                        variant={timeValue === "today" ? 'contained' : 'string'}
+                                        variant={timeValue === "daily" ? 'contained' : 'string'}
                                         size="small"
-                                        name="today"
+                                        name="daily"
                                         onClick={(e) => handleChangeTime(e)}
                                     >
                                         Today
                                     </Button>
                                     <Button
                                         disableElevation
-                                        variant={timeValue === "week" ? 'contained' : 'string'}
+                                        variant={timeValue === "weekly" ? 'contained' : 'string'}
                                         size="small"
-                                        name="week"
+                                        name="weekly"
                                         onClick={(e) => handleChangeTime(e)}
                                     >
                                         This Week
                                     </Button>
                                     <Button
                                         disableElevation
-                                        variant={timeValue === "month" ? 'contained' : 'string'}
+                                        variant={timeValue === "monthly" ? 'contained' : 'string'}
                                         size="small"
-                                        name="month"
+                                        name="monthly"
                                         onClick={(e) => handleChangeTime(e)}
                                     >
                                         This Month
@@ -157,11 +188,9 @@ const TotalClicksLineChartCard = ({ isLoading }) => {
                                 <Grid item xs={6}>
                                     <Grid container alignItems="center">
                                         <Grid item>
-                                            {timeValue ? (
-                                                <Typography className={classes.cardHeading}>108</Typography>
-                                            ) : (
-                                                <Typography className={classes.cardHeading}>961</Typography>
-                                            )}
+                                            <Typography className={classes.cardHeading}>
+                                                {totalClicks && totalClicks}
+                                            </Typography>
                                         </Grid>
                                         
                                         <Grid item xs={12}>
@@ -176,6 +205,7 @@ const TotalClicksLineChartCard = ({ isLoading }) => {
                         </Grid>
                     </Grid>
                 </MainCard>
+                </>
             )}
         </>
     );
