@@ -1,5 +1,11 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import { useEffect, useCallback } from 'react';
+
+import axios from "axios";
+
+/* Redux imports */
+import { useSelector, useDispatch } from 'react-redux';
+import { actions } from "../../../reducers/popularTimesForClicksDataReducer";
 
 // material-ui
 import { makeStyles } from '@material-ui/styles';
@@ -57,10 +63,36 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-// ===========================|| DASHBOARD - POPULAR EVENTS TIME LIGHT CARD ||=========================== //
+const clicksUrl = "http://localhost:5555/dashboard/charts/clicks/popular-time/monthly";
 
-const PopularEventsTimeLightCard = ({ isLoading }) => {
+
+// ===========================|| DASHBOARD - POPULAR CLICKS TIME LIGHT CARD ||=========================== //
+
+const PopularClicksTimeLightCard = ({ isLoading }) => {
     const classes = useStyles();
+    const dispatch = useDispatch();
+
+    /* Access redux store */
+    const popularTimeForClicks = useSelector(state => state.popularTimeForClicks.data);
+
+    /* useCallback hook used to memoize previously fetched resuts. 
+    When urlParams prop changes, function is called again to render Table component */
+    const fetchPopularTime = useCallback(async () => {
+        try {
+            const response = await axios.get(clicksUrl);
+            if (response.status === 200) {
+                // Call action defined in clickChartDataReducer which matches current timeValue
+                dispatch(actions.monthly(response.data))            
+            } else {
+                dispatch(actions.chartError(response.status))
+            }
+        } catch (error) {
+            dispatch(actions.chartError(error))
+        }
+    }, [dispatch]);
+
+    useEffect(fetchPopularTime, [ fetchPopularTime ]);
+
 
     return (
         <>
@@ -81,10 +113,13 @@ const PopularEventsTimeLightCard = ({ isLoading }) => {
                                     mb: 0.45
                                 }}
                                 className={classes.padding}
-                                primary={<Typography variant="h4">5:00PM</Typography>}
+                                primary={
+                                    <Typography variant="h4">
+                                        {popularTimeForClicks && popularTimeForClicks}
+                                    </Typography>}
                                 secondary={
                                     <Typography variant="subtitle2" className={classes.secondary}>
-                                        This month's most popular time of day for <span style={{fontWeight: "bold"}}>events</span>
+                                        This month's most popular time of day for <span style={{fontWeight: "bold"}}>clicks</span>
                                     </Typography>
                                 }
                             />
@@ -96,8 +131,8 @@ const PopularEventsTimeLightCard = ({ isLoading }) => {
     );
 };
 
-PopularEventsTimeLightCard.propTypes = {
+PopularClicksTimeLightCard.propTypes = {
     isLoading: PropTypes.bool
 };
 
-export default PopularEventsTimeLightCard;
+export default PopularClicksTimeLightCard;

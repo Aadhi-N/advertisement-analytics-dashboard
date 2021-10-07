@@ -6,6 +6,7 @@ import { tableDataReducer } from "./tableDataReducer";
 import clickChartDataReducer from "./clickChartDataReducer";
 import eventChartDataReducer from "./eventChartDataReducer";
 import impressionChartDataReducer from "./impressionChartDataReducer";
+import popularTimesForClicksDataReducer from "./popularTimesForClicksDataReducer";
 
 // ===========================|| COMBINE REDUCER ||=========================== //
 
@@ -14,7 +15,8 @@ const reducer = combineReducers({
     tableData: tableDataReducer,
     clickChartData: clickChartDataReducer,
     eventChartData: eventChartDataReducer,
-    impressionChartData: impressionChartDataReducer
+    impressionChartData: impressionChartDataReducer,
+    popularTimeForClicks: popularTimesForClicksDataReducer
 });
 
 export default reducer;

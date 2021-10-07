@@ -12,7 +12,7 @@ import TotalEventsLineChartCard from './TotalEventsLineChartCard';
 import PopularCard from './PopularCard';
 import TotalClicksLineChartCard from './TotalClicksLineChartCard';
 import PopularImpressionsTimeDarkCard from './PopularImpressionsTimeDarkCard';
-import PopularEventsTimeLightCard from './PopularEventsTimeLightCard';
+import PopularClicksTimeLightCard from './PopularClicksTimeLightCard';
 import TotalGrowthBarChart from './TotalGrowthBarChart';
 import { gridSpacing } from 'store/constant';
 
@@ -64,7 +64,7 @@ const Dashboard = () => {
                                 <PopularImpressionsTimeDarkCard isLoading={isLoading} />
                             </Grid>
                             <Grid item sm={6} xs={12} md={6} lg={12}>
-                                <PopularEventsTimeLightCard isLoading={isLoading} />
+                                <PopularClicksTimeLightCard isLoading={isLoading} />
                             </Grid>
                         </Grid>
                     </Grid>

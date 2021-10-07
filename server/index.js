@@ -151,7 +151,7 @@ app.get('/dashboard/charts/events/total-events/:timeline', (req, res, next) => {
   return next();
 }, queryHandler);
 
-/* MODE OF EVENTS RANKED BY TIME - CHART */
+/* MOST POPULAR IMPRESSIONS - CHART */
 // Monthly data - Get most occurence of impressions by time
 // Query: sum impressions, group by date, order by most impressions, return first row
 app.get('/dashboard/charts/impressions/popular-time/monthly', (req, res, next) => {
@@ -166,6 +166,20 @@ app.get('/dashboard/charts/impressions/popular-time/monthly', (req, res, next) =
   return next();
 }, queryHandler);
 
+/* MOST POPULAR CLICKS - CHART */
+// Monthly data - Get most occurence of clicks by time
+// Query: sum clicks, group by date, order by most clicks, return first row
+app.get('/dashboard/charts/clicks/popular-time/monthly', (req, res, next) => {
+  req.sqlQuery = `
+    SELECT hour, SUM(clicks)
+    FROM public.hourly_stats
+    WHERE '2017-06-01' <= date and date < '2017-07-01'
+    GROUP BY hour
+    ORDER BY sum DESC
+    FETCH NEXT 1 ROW ONLY;
+  `;
+  return next();
+}, queryHandler);
 
 
 
