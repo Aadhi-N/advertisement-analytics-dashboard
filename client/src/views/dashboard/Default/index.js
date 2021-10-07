@@ -8,7 +8,7 @@ import { daily, weekly, monthly } from "../../../reducers/clickChartDataReducer"
 import { Grid } from '@material-ui/core';
 
 /* Components imports */
-import EarningCard from './EarningCard';
+import TotalEventsLineChartCard from './TotalEventsLineChartCard';
 import PopularCard from './PopularCard';
 import TotalClicksLineChartCard from './TotalClicksLineChartCard';
 import TotalIncomeDarkCard from './TotalIncomeDarkCard';
@@ -53,7 +53,7 @@ const Dashboard = () => {
             <Grid item xs={12}>
                 <Grid container spacing={gridSpacing}>
                     <Grid item lg={4} md={6} sm={6} xs={12}>
-                        <EarningCard isLoading={isLoading} />
+                        <TotalEventsLineChartCard isLoading={isLoading} />
                     </Grid>
                     <Grid item lg={4} md={6} sm={6} xs={12}>
                         <TotalClicksLineChartCard isLoading={isLoading} />

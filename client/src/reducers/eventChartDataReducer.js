@@ -2,17 +2,17 @@ import { createSlice } from '@reduxjs/toolkit';
 
 // ===========================|| CLICK CHART DATA REDUCER ||=========================== //
 
-export const clickChartDataReducer = createSlice({
-    name: 'clickChart',
+export const eventChartDataReducer = createSlice({
+    name: 'eventChart',
     initialState: {
-        clickChartData: [],
+        eventChartData: [],
         isLoading: true
     },
     reducers: {
         daily: (state, { action, payload }) => {
             return {
                 ...state, 
-                clickChartData: Number(payload[0].sum_clicks), 
+                eventChartData: Number(payload[0].sum_events), 
                 isLoading: false
             };
         },
@@ -20,24 +20,24 @@ export const clickChartDataReducer = createSlice({
 
             /* Sum the 'total_clicks' property in the array of objects */
             const weeklyTotal = payload.reduce(function(prev, curr) {
-                return Number(prev) + Number(curr.sum_clicks);
+                return Number(prev) + Number(curr.sum_events);
             }, 0);
 
             return {
                 ...state, 
-                clickChartData: weeklyTotal ? weeklyTotal : payload, 
+                eventChartData: weeklyTotal ? weeklyTotal : payload, 
                 isLoading: false
             };
         },
         monthly: (state, { action, payload }) => {
              /* Sum the 'total_clicks' property in the array of objects */
              const monthlyTotal = payload.reduce(function(prev, curr) {
-                return Number(prev) + Number(curr.sum_clicks);
+                return Number(prev) + Number(curr.sum_events);
             }, 0);
 
             return {
                 ...state, 
-                clickChartData: monthlyTotal ? monthlyTotal : payload, 
+                eventChartData: monthlyTotal ? monthlyTotal : payload, 
                 isLoading: false
             };
         },
@@ -52,5 +52,5 @@ export const clickChartDataReducer = createSlice({
 
 // Action creators are generated for each case reducer function
 // export const { daily, weekly, monthly, chartError } = clickChartDataReducer.actions;
-export const { actions } = clickChartDataReducer;
-export default clickChartDataReducer.reducer;
+export const { actions } = eventChartDataReducer;
+export default eventChartDataReducer.reducer;

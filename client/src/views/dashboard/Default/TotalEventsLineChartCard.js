@@ -1,33 +1,32 @@
 import PropTypes from 'prop-types';
-import { useCallback, useState, useEffect} from "react";
+import { useEffect, useState, useCallback } from 'react';
 import axios from "axios";
 
 /* Redux imports */
 import { useSelector, useDispatch } from 'react-redux';
-import { actions } from "../../../reducers/clickChartDataReducer";
-
-/* Material-UI Styles imports */
-import { makeStyles } from '@material-ui/styles';
-import { Avatar, Button, Grid, Typography } from '@material-ui/core';
-
-/* Charts imports */
-import Chart from 'react-apexcharts';
+import { actions } from "../../../reducers/eventChartDataReducer";
 
 /* Components imports */
 import MainCard from 'ui-component/cards/MainCard';
-import SkeletonTotalClicksCard from 'ui-component/cards/Skeleton/EarningCard';
+import SkeletonTotalEventsCard from 'ui-component/cards/Skeleton/EarningCard';
+
+/* Charts imports */
+import Chart from 'react-apexcharts';
 
 /* Chart data imports */
 import ChartDataMonth from './chart-data/total-order-month-line-chart';
 import ChartDataYear from './chart-data/total-order-year-line-chart';
 
-/* Assets imports */
-import MouseOutlined from '@material-ui/icons/MouseOutlined';
+/* Material-UI imports */
+import { makeStyles } from '@material-ui/styles';
+import { Avatar, Grid, Typography, Button } from '@material-ui/core';
+import PhoneAndroid from '@material-ui/icons/PhoneAndroid';
 
-/* Style constant */
+
+/* Style Constant */
 const useStyles = makeStyles((theme) => ({
     card: {
-        backgroundColor: theme.palette.primary.dark,
+        backgroundColor: theme.palette.secondary.dark,
         color: '#fff',
         overflow: 'hidden',
         position: 'relative',
@@ -40,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
             position: 'absolute',
             width: '210px',
             height: '210px',
-            background: theme.palette.primary[800],
+            background: theme.palette.secondary[800],
             borderRadius: '50%',
             zIndex: 1,
             top: '-85px',
@@ -56,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
             zIndex: 1,
             width: '210px',
             height: '210px',
-            background: theme.palette.primary[800],
+            background: theme.palette.secondary[800],
             borderRadius: '50%',
             top: '-125px',
             right: '-15px',
@@ -71,7 +70,7 @@ const useStyles = makeStyles((theme) => ({
         padding: '20px !important'
     },
     avatar: {
-        backgroundColor: theme.palette.primary[800],
+        backgroundColor: theme.palette.secondary[800],
         color: '#fff',
         cursor: "default"
     },
@@ -85,41 +84,41 @@ const useStyles = makeStyles((theme) => ({
     subHeading: {
         fontSize: '1rem',
         fontWeight: 500,
-        color: theme.palette.primary[200]
+        color: theme.palette.secondary[200]
     },
     avatarCircle: {
         ...theme.typography.smallAvatar,
         cursor: 'pointer',
-        backgroundColor: theme.palette.primary[200],
-        color: theme.palette.primary.dark
+        backgroundColor: theme.palette.secondary[200],
+        color: theme.palette.secondary.dark
     },
     circleIcon: {
         transform: 'rotate3d(1, 1, 1, 45deg)'
     }
 }));
 
-const clicksUrl = "http://localhost:5555/dashboard/charts/stats/total-clicks/";
+// API url
+const eventsUrl = "http://localhost:5555/dashboard/charts/events/total-events/";
 
 
-// ===========================|| DASHBOARD - TOTAL CLICKS LINE CHART CARD ||=========================== //
+//= ==========================|| DASHBOARD DEFAULT - TOTAL EVENTS LINE CHART CARD ||===========================//
 
-const TotalClicksLineChartCard = ({ isLoading }) => {
+const TotalEventsLineChartCard = ({ isLoading }) => {
     const classes = useStyles();
 
     const [timeValue, setTimeValue] = useState("daily");
-
     const dispatch = useDispatch();
 
     /* Access redux store */
-    const totalClicks = useSelector(state => state.clickChartData.clickChartData);
+    const totalEvents = useSelector(state => state.eventChartData.eventChartData);
 
     /* useCallback hook used to memoize previously fetched resuts. 
     When urlParams prop changes, function is called again to render Table component */
-    const fetchClickData = useCallback(async () => {
+    const fetchEventData = useCallback(async () => {
         try {
-            const response = await axios.get(clicksUrl + timeValue);
+            const response = await axios.get(eventsUrl + timeValue);
             if (response.status === 200) {
-                // Call action defined in clickChartDataReducer which matches current timeValue
+                // Call action defined in eventChartDataReducer which matches current timeValue
                 dispatch(actions[timeValue](response.data))            
             } else {
                 dispatch(actions.chartError(response.status))
@@ -129,16 +128,18 @@ const TotalClicksLineChartCard = ({ isLoading }) => {
         }
     }, [timeValue, dispatch]);
 
-    useEffect(fetchClickData, [ timeValue, fetchClickData ]);
+    useEffect(fetchEventData, [ timeValue, fetchEventData ]);
 
     const handleChangeTime = (e) => {
         setTimeValue(e.target.name);
     };
-    
+
+    console.log('event', totalEvents)
+
     return (
         <>
             {isLoading ? (
-                <SkeletonTotalClicksCard />
+                <SkeletonTotalEventsCard />
             ) : (
                 <MainCard border={false} className={classes.card} contentClass={classes.content}>
                     <Grid container direction="column">
@@ -146,11 +147,13 @@ const TotalClicksLineChartCard = ({ isLoading }) => {
                             <Grid container justifyContent="space-between">
                                 <Grid item>
                                     <Avatar variant="rounded" className={classes.avatar}>
-                                        <MouseOutlined fontSize="inherit" />
+                                        <PhoneAndroid fontSize="inherit" />
                                     </Avatar>
                                 </Grid>
                                 <Grid item>
                                     <Button
+                                        color="secondary"
+                                        className={classes.button}
                                         disableElevation
                                         variant={timeValue === "daily" ? 'contained' : 'string'}
                                         size="small"
@@ -160,6 +163,7 @@ const TotalClicksLineChartCard = ({ isLoading }) => {
                                         Today
                                     </Button>
                                     <Button
+                                        color="secondary"
                                         disableElevation
                                         variant={timeValue === "weekly" ? 'contained' : 'string'}
                                         size="small"
@@ -169,6 +173,7 @@ const TotalClicksLineChartCard = ({ isLoading }) => {
                                         This Week
                                     </Button>
                                     <Button
+                                        color="secondary"
                                         disableElevation
                                         variant={timeValue === "monthly" ? 'contained' : 'string'}
                                         size="small"
@@ -186,12 +191,12 @@ const TotalClicksLineChartCard = ({ isLoading }) => {
                                     <Grid container alignItems="center">
                                         <Grid item>
                                             <Typography className={classes.cardHeading}>
-                                                {totalClicks && totalClicks}
+                                                {totalEvents && totalEvents}
                                             </Typography>
                                         </Grid>
                                         
                                         <Grid item xs={12}>
-                                            <Typography className={classes.subHeading}>Total Clicks</Typography>
+                                            <Typography className={classes.subHeading}>Total Events</Typography>
                                         </Grid>
                                     </Grid>
                                 </Grid>
@@ -207,8 +212,8 @@ const TotalClicksLineChartCard = ({ isLoading }) => {
     );
 };
 
-TotalClicksLineChartCard.propTypes = {
+TotalEventsLineChartCard.propTypes = {
     isLoading: PropTypes.bool
 };
 
-export default TotalClicksLineChartCard;
+export default TotalEventsLineChartCard;
