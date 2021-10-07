@@ -1,18 +1,22 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import { useEffect, useCallback } from 'react';
 
-// material-ui
+import axios from "axios";
+
+/* Redux imports */
+import { useSelector, useDispatch } from 'react-redux';
+import { actions } from "../../../reducers/impressionChartDataReducer";
+
+/* Material-UI imports */
 import { makeStyles } from '@material-ui/styles';
 import { Avatar, List, ListItem, ListItemAvatar, ListItemText, Typography } from '@material-ui/core';
+import AccessTime from "@material-ui/icons/AccessTime";
 
-// project imports
+/* Components imports */
 import MainCard from 'ui-component/cards/MainCard';
-import TotalIncomeCard from 'ui-component/cards/Skeleton/TotalIncomeCard';
+import PopularTimeCard from 'ui-component/cards/Skeleton/PopularTimeCard';
 
-// assets
-import TableChartOutlinedIcon from '@material-ui/icons/TableChartOutlined';
-
-// style constant
+/* Style constant */
 const useStyles = makeStyles((theme) => ({
     card: {
         backgroundColor: theme.palette.primary.dark,
@@ -62,22 +66,47 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-// ===========================|| DASHBOARD - TOTAL INCOME DARK CARD ||=========================== //
+const impressionsUrl = "http://localhost:5555/dashboard/charts/impressions/popular-time/monthly";
 
-const TotalIncomeDarkCard = ({ isLoading }) => {
+// ===========================|| DASHBOARD - POPULAR IMPRESSIONS TIME DARK CARD ||=========================== //
+
+const PopularImpressionsTimeDarkCard = ({ isLoading }) => {
     const classes = useStyles();
+
+    const dispatch = useDispatch();
+
+    /* Access redux store */
+    const popularTimeForImpressions = useSelector(state => state.impressionChartData.data);
+
+    /* useCallback hook used to memoize previously fetched resuts. 
+    When urlParams prop changes, function is called again to render Table component */
+    const fetchPopularTime = useCallback(async () => {
+        try {
+            const response = await axios.get(impressionsUrl);
+            if (response.status === 200) {
+                // Call action defined in clickChartDataReducer which matches current timeValue
+                dispatch(actions.monthly(response.data))            
+            } else {
+                dispatch(actions.chartError(response.status))
+            }
+        } catch (error) {
+            dispatch(actions.chartError(error))
+        }
+    }, [dispatch]);
+
+    useEffect(fetchPopularTime, [ fetchPopularTime ]);
 
     return (
         <>
             {isLoading ? (
-                <TotalIncomeCard />
+                <PopularTimeCard />
             ) : (
                 <MainCard border={false} className={classes.card} contentClass={classes.content}>
                     <List className={classes.padding}>
                         <ListItem alignItems="center" disableGutters className={classes.padding}>
                             <ListItemAvatar>
                                 <Avatar variant="rounded" className={classes.avatar}>
-                                    <TableChartOutlinedIcon fontSize="inherit" />
+                                    <AccessTime fontSize="inherit" />
                                 </Avatar>
                             </ListItemAvatar>
                             <ListItemText
@@ -88,12 +117,12 @@ const TotalIncomeDarkCard = ({ isLoading }) => {
                                 }}
                                 primary={
                                     <Typography variant="h4" className={classes.primary}>
-                                        $203k
+                                        {popularTimeForImpressions && popularTimeForImpressions}
                                     </Typography>
                                 }
                                 secondary={
                                     <Typography variant="subtitle2" className={classes.secondary}>
-                                        Total Income
+                                        This month's most popular time of day for <span style={{fontWeight: "bold"}}>impressions</span>
                                     </Typography>
                                 }
                             />
@@ -105,8 +134,8 @@ const TotalIncomeDarkCard = ({ isLoading }) => {
     );
 };
 
-TotalIncomeDarkCard.propTypes = {
+PopularImpressionsTimeDarkCard.propTypes = {
     isLoading: PropTypes.bool
 };
 
-export default TotalIncomeDarkCard;
+export default PopularImpressionsTimeDarkCard;

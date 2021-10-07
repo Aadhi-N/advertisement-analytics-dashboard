@@ -11,8 +11,8 @@ import { Grid } from '@material-ui/core';
 import TotalEventsLineChartCard from './TotalEventsLineChartCard';
 import PopularCard from './PopularCard';
 import TotalClicksLineChartCard from './TotalClicksLineChartCard';
-import TotalIncomeDarkCard from './TotalIncomeDarkCard';
-import TotalIncomeLightCard from './TotalIncomeLightCard';
+import PopularImpressionsTimeDarkCard from './PopularImpressionsTimeDarkCard';
+import PopularEventsTimeLightCard from './PopularEventsTimeLightCard';
 import TotalGrowthBarChart from './TotalGrowthBarChart';
 import { gridSpacing } from 'store/constant';
 
@@ -61,10 +61,10 @@ const Dashboard = () => {
                     <Grid item lg={4} md={12} sm={12} xs={12}>
                         <Grid container spacing={gridSpacing}>
                             <Grid item sm={6} xs={12} md={6} lg={12}>
-                                <TotalIncomeDarkCard isLoading={isLoading} />
+                                <PopularImpressionsTimeDarkCard isLoading={isLoading} />
                             </Grid>
                             <Grid item sm={6} xs={12} md={6} lg={12}>
-                                <TotalIncomeLightCard isLoading={isLoading} />
+                                <PopularEventsTimeLightCard isLoading={isLoading} />
                             </Grid>
                         </Grid>
                     </Grid>

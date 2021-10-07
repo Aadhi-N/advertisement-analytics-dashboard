@@ -134,8 +134,6 @@ const TotalEventsLineChartCard = ({ isLoading }) => {
         setTimeValue(e.target.name);
     };
 
-    console.log('event', totalEvents)
-
     return (
         <>
             {isLoading ? (

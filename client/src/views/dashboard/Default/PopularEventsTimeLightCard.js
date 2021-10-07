@@ -7,10 +7,10 @@ import { Avatar, List, ListItem, ListItemAvatar, ListItemText, Typography } from
 
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
-import TotalIncomeCard from 'ui-component/cards/Skeleton/TotalIncomeCard';
+import PopularTimeCard from 'ui-component/cards/Skeleton/PopularTimeCard';
 
 // assets
-import StorefrontTwoToneIcon from '@material-ui/icons/StorefrontTwoTone';
+import AccessTimeTwoToneIcon from "@material-ui/icons/AccessTimeFilledTwoTone";
 
 // style constant
 const useStyles = makeStyles((theme) => ({
@@ -57,22 +57,22 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-// ===========================|| DASHBOARD - TOTAL INCOME LIGHT CARD ||=========================== //
+// ===========================|| DASHBOARD - POPULAR EVENTS TIME LIGHT CARD ||=========================== //
 
-const TotalIncomeLightCard = ({ isLoading }) => {
+const PopularEventsTimeLightCard = ({ isLoading }) => {
     const classes = useStyles();
 
     return (
         <>
             {isLoading ? (
-                <TotalIncomeCard />
+                <PopularTimeCard />
             ) : (
                 <MainCard className={classes.card} contentClass={classes.content}>
                     <List className={classes.padding}>
                         <ListItem alignItems="center" disableGutters className={classes.padding}>
                             <ListItemAvatar>
                                 <Avatar variant="rounded" className={classes.avatar}>
-                                    <StorefrontTwoToneIcon fontSize="inherit" />
+                                    <AccessTimeTwoToneIcon fontSize="inherit" />
                                 </Avatar>
                             </ListItemAvatar>
                             <ListItemText
@@ -81,10 +81,10 @@ const TotalIncomeLightCard = ({ isLoading }) => {
                                     mb: 0.45
                                 }}
                                 className={classes.padding}
-                                primary={<Typography variant="h4">$203k</Typography>}
+                                primary={<Typography variant="h4">5:00PM</Typography>}
                                 secondary={
                                     <Typography variant="subtitle2" className={classes.secondary}>
-                                        Total Income
+                                        This month's most popular time of day for <span style={{fontWeight: "bold"}}>events</span>
                                     </Typography>
                                 }
                             />
@@ -96,8 +96,8 @@ const TotalIncomeLightCard = ({ isLoading }) => {
     );
 };
 
-TotalIncomeLightCard.propTypes = {
+PopularEventsTimeLightCard.propTypes = {
     isLoading: PropTypes.bool
 };
 
-export default TotalIncomeLightCard;
+export default PopularEventsTimeLightCard;

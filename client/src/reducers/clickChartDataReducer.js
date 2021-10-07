@@ -51,6 +51,5 @@ export const clickChartDataReducer = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-// export const { daily, weekly, monthly, chartError } = clickChartDataReducer.actions;
 export const { actions } = clickChartDataReducer;
 export default clickChartDataReducer.reducer;

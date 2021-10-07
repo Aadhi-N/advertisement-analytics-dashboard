@@ -151,6 +151,24 @@ app.get('/dashboard/charts/events/total-events/:timeline', (req, res, next) => {
   return next();
 }, queryHandler);
 
+/* MODE OF EVENTS RANKED BY TIME - CHART */
+// Monthly data - Get most occurence of impressions by time
+// Query: sum impressions, group by date, order by most impressions, return first row
+app.get('/dashboard/charts/impressions/popular-time/monthly', (req, res, next) => {
+  req.sqlQuery = `
+    SELECT hour, SUM(impressions)
+    FROM public.hourly_stats
+    WHERE '2017-06-01' <= date and date < '2017-07-01'
+    GROUP BY hour
+    ORDER BY sum DESC
+    FETCH NEXT 1 ROW ONLY;
+  `;
+  return next();
+}, queryHandler);
+
+
+
+
 ///////////////////////////////////////////////////////////////////
 app.get('/events/location', (req, res, next) => {
   req.sqlQuery = `
