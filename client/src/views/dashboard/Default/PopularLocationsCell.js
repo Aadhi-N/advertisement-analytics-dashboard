@@ -20,7 +20,7 @@ const PopularLocationsCell = ({ locationChartData, metricValue }) => {
 
     const cells = locationChartData.map((poi) => (
         <>
-        <Grid container direction="column">
+        <Grid container direction="column" key={poi.poi_id}>
                 <Grid item>
                     <Grid container alignItems="center" justifyContent="space-between">
                         <Grid item>

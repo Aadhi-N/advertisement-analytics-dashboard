@@ -13,7 +13,7 @@ import PopularLocationsCard from './PopularLocationsCard';
 import TotalClicksLineChartCard from './TotalClicksLineChartCard';
 import PopularImpressionsTimeDarkCard from './PopularImpressionsTimeDarkCard';
 import PopularClicksTimeLightCard from './PopularClicksTimeLightCard';
-import TotalGrowthBarChart from './TotalGrowthBarChart';
+import TotalRevenueAndClicksBarChart from './TotalRevenueAndClicksBarChart';
 import { gridSpacing } from 'store/constant';
 
 // ===========================|| DEFAULT DASHBOARD ||=========================== //
@@ -73,7 +73,7 @@ const Dashboard = () => {
             <Grid item xs={12}>
                 <Grid container spacing={gridSpacing}>
                     <Grid item xs={12} md={8}>
-                        <TotalGrowthBarChart isLoading={isLoading} />
+                        <TotalRevenueAndClicksBarChart isLoading={isLoading} />
                     </Grid>
                     <Grid item xs={12} md={4}>
                         <PopularLocationsCard isLoading={isLoading} />

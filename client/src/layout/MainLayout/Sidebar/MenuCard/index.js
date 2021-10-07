@@ -66,11 +66,6 @@ const ProjectSourceCard = () => {
                         <Typography variant="h4">View Project Source</Typography>
                     </Grid>
                     <Grid item>
-                        <Typography variant="subtitle2" className={classes.tagLine}>
-                            App still under construction
-                        </Typography>
-                    </Grid>
-                    <Grid item>
                         <Stack direction="row">
                             <AnimateButton>
                                 <Button

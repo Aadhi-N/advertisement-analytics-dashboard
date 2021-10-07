@@ -292,6 +292,46 @@ app.get('/dashboard/charts/locations/total-:metric/:timeline', (req, res, next) 
   return next();
 }, queryHandler);
 
+/* REVENUE BAR CHART */
+app.get('/dashboard/charts/revenue/:timeline', (req, res, next) => {
+  console.log('params', req.params)
+  switch(req.params.timeline) {
+    case "daily":
+      req.sqlQuery = `
+        SELECT date, hour, SUM(revenue) as revenue
+        FROM public.hourly_stats
+        WHERE date = '2017-06-16'
+        GROUP BY hour, date
+        ORDER BY hour      
+      `;
+    break;
+
+    case "weekly":
+      req.sqlQuery = `
+        SELECT date, hour, SUM(revenue) as revenue
+        FROM public.hourly_stats
+        WHERE '2017-06-09' <= date and date < '2017-06-16'
+        GROUP BY hour, date
+        ORDER BY hour    
+      `;
+    break;
+
+    case "monthly":
+      req.sqlQuery = `
+        SELECT date, hour, SUM(revenue) as revenue
+        FROM public.hourly_stats
+        WHERE '2017-06-01' <= date and date < '2017-07-01'
+        GROUP BY hour, date
+        ORDER BY hour    
+      `;
+    break;
+    
+    default: 
+      res.json({message: "Server error."})
+  };
+  return next();
+}, queryHandler)
+
 
 
 

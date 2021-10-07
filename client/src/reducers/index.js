@@ -8,6 +8,7 @@ import eventChartDataReducer from "./eventChartDataReducer";
 import impressionChartDataReducer from "./impressionChartDataReducer";
 import popularTimesForClicksDataReducer from "./popularTimesForClicksDataReducer";
 import locationChartDataReducer from "./locationChartDataReducer";
+import revenueChartDataReducer from "./revenueChartDataReducer";
 
 // ===========================|| COMBINE REDUCER ||=========================== //
 
@@ -18,7 +19,8 @@ const reducer = combineReducers({
     eventChartData: eventChartDataReducer,
     impressionChartData: impressionChartDataReducer,
     popularTimeForClicks: popularTimesForClicksDataReducer,
-    locationChartData: locationChartDataReducer
+    locationChartData: locationChartDataReducer,
+    revenueChartData: revenueChartDataReducer
 });
 
 export default reducer;

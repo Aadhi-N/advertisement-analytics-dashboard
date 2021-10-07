@@ -9,7 +9,7 @@ import { gridSpacing } from 'store/constant';
 
 // ===========================|| SKELETON TOTAL GROWTH BAR CHART ||=========================== //
 
-const TotalGrowthBarChart = () => (
+const TotalRevenueAndClicksBarChartSkeleton = () => (
     <Card>
         <CardContent>
             <Grid container spacing={gridSpacing}>
@@ -38,4 +38,4 @@ const TotalGrowthBarChart = () => (
     </Card>
 );
 
-export default TotalGrowthBarChart;
+export default TotalRevenueAndClicksBarChartSkeleton;

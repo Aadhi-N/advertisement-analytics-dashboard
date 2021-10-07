@@ -1,40 +1,48 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import { useEffect, useState, useCallback } from 'react';
 
-// material-ui
+import axios from "axios";
+
+/* Redux imports */
+import { useSelector, useDispatch } from 'react-redux';
+import { actions } from "../../../reducers/revenueChartDataReducer";
+
+/* Material-UI imports */
 import { Grid, MenuItem, TextField, Typography, useTheme } from '@material-ui/core';
 
-// third-party
+/* Chart imports */
 import ApexCharts from 'apexcharts';
 import Chart from 'react-apexcharts';
+import revenueChartData from './chart-data/total-revenue-bar-chart';
+import { getBarChartData } from './chart-data/total-revenue-bar-chart';
 
-// project imports
-import SkeletonTotalGrowthBarChart from 'ui-component/cards/Skeleton/TotalGrowthBarChart';
+/* Components imports */
+import Skeleton from 'ui-component/cards/Skeleton/TotalRevenueAndClicksBarChart.Skeleton';
 import MainCard from 'ui-component/cards/MainCard';
 import { gridSpacing } from 'store/constant';
 
-// chart data
-import chartData from './chart-data/total-growth-bar-chart';
 
 const status = [
     {
-        value: 'today',
+        value: 'daily',
         label: 'Today'
     },
     {
-        value: 'month',
-        label: 'This Month'
+        value: 'weekly',
+        label: 'This Week'
     },
     {
-        value: 'year',
-        label: 'This Year'
+        value: 'monthly',
+        label: 'This Month'
     }
 ];
 
+const revenueUrl = "http://localhost:5555/dashboard/charts/revenue/";
+
 // ===========================|| DASHBOARD DEFAULT - TOTAL GROWTH BAR CHART ||=========================== //
 
-const TotalGrowthBarChart = ({ isLoading }) => {
-    const [value, setValue] = React.useState('today');
+const TotalRevenueAndClicksBarChart = ({ isLoading }) => {
+    const [value, setValue] = useState('daily');
     const theme = useTheme();
 
     const { primary } = theme.palette.text;
@@ -46,9 +54,9 @@ const TotalGrowthBarChart = ({ isLoading }) => {
     const secondaryLight = theme.palette.secondary.light;
     const grey500 = theme.palette.grey[500];
 
-    React.useEffect(() => {
+    useEffect(() => {
         const newChartData = {
-            ...chartData.options,
+            ...revenueChartData.options,
             colors: [primary200, primaryDark, secondaryMain, secondaryLight],
             xaxis: {
                 labels: {
@@ -83,10 +91,40 @@ const TotalGrowthBarChart = ({ isLoading }) => {
         }
     }, [primary200, primaryDark, secondaryMain, secondaryLight, primary, grey200, isLoading, grey500]);
 
+    useEffect(() => {
+        // getBarChartData()
+    });
+
+    const totalRevenue = useSelector(state => state.revenueChartData.data);
+    const [timeValue, setTimeValue] = useState("daily");
+    const dispatch = useDispatch();
+
+    const handleChangeTime = (val) => {
+        setTimeValue(val);
+    };
+
+
+    const fetchEventData = useCallback(async () => {
+        try {
+            const response = await axios.get(revenueUrl + timeValue);
+            if (response.status === 200) {
+                dispatch(actions.chartData(response.data))            
+            } else {
+                dispatch(actions.chartError(response.status))
+            }
+        } catch (error) {
+            dispatch(actions.chartError(error))
+        }
+    }, [timeValue, dispatch]);
+
+    useEffect(fetchEventData, [ timeValue, fetchEventData ]);
+
+
+
     return (
         <>
             {isLoading ? (
-                <SkeletonTotalGrowthBarChart />
+                <Skeleton />
             ) : (
                 <MainCard>
                     <Grid container spacing={gridSpacing}>
@@ -95,7 +133,7 @@ const TotalGrowthBarChart = ({ isLoading }) => {
                                 <Grid item>
                                     <Grid container direction="column" spacing={1}>
                                         <Grid item>
-                                            <Typography variant="subtitle2">Total Growth</Typography>
+                                            <Typography variant="subtitle2">Total Revenue</Typography>
                                         </Grid>
                                         <Grid item>
                                             <Typography variant="h3">$2,324.00</Typography>
@@ -110,7 +148,7 @@ const TotalGrowthBarChart = ({ isLoading }) => {
                                         onChange={(e) => setValue(e.target.value)}
                                     >
                                         {status.map((option) => (
-                                            <MenuItem key={option.value} value={option.value}>
+                                            <MenuItem key={option.value} value={option.value} onClick={() => handleChangeTime(option.value)}>
                                                 {option.label}
                                             </MenuItem>
                                         ))}
@@ -119,7 +157,7 @@ const TotalGrowthBarChart = ({ isLoading }) => {
                             </Grid>
                         </Grid>
                         <Grid item xs={12}>
-                            <Chart {...chartData} />
+                            <Chart {...revenueChartData} />
                         </Grid>
                     </Grid>
                 </MainCard>
@@ -128,8 +166,8 @@ const TotalGrowthBarChart = ({ isLoading }) => {
     );
 };
 
-TotalGrowthBarChart.propTypes = {
+TotalRevenueAndClicksBarChart.propTypes = {
     isLoading: PropTypes.bool
 };
 
-export default TotalGrowthBarChart;
+export default TotalRevenueAndClicksBarChart;
