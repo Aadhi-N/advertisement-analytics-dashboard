@@ -14,7 +14,6 @@ import { Grid, MenuItem, TextField, Typography, useTheme } from '@material-ui/co
 import ApexCharts from 'apexcharts';
 import Chart from 'react-apexcharts';
 import revenueChartData from './chart-data/total-revenue-bar-chart';
-import { getBarChartData } from './chart-data/total-revenue-bar-chart';
 
 /* Components imports */
 import Skeleton from 'ui-component/cards/Skeleton/TotalRevenueAndClicksBarChart.Skeleton';
@@ -91,11 +90,12 @@ const TotalRevenueAndClicksBarChart = ({ isLoading }) => {
         }
     }, [primary200, primaryDark, secondaryMain, secondaryLight, primary, grey200, isLoading, grey500]);
 
-    useEffect(() => {
-        // getBarChartData()
-    });
+
 
     const totalRevenue = useSelector(state => state.revenueChartData.data);
+    const xAxis = useSelector(state => state.revenueChartData.xAxis)
+
+    // console.log('XXXAXIS',  xAxis)
     const [timeValue, setTimeValue] = useState("daily");
     const dispatch = useDispatch();
 
@@ -118,7 +118,6 @@ const TotalRevenueAndClicksBarChart = ({ isLoading }) => {
     }, [timeValue, dispatch]);
 
     useEffect(fetchEventData, [ timeValue, fetchEventData ]);
-
 
 
     return (

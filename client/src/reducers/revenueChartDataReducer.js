@@ -6,6 +6,7 @@ export const revenueChartDataReducer = createSlice({
     name: 'revenueChart',
     initialState: {
         data: [],
+        xAxis: [],
         isLoading: true
     },
     reducers: { 
@@ -13,6 +14,7 @@ export const revenueChartDataReducer = createSlice({
             return {
                 ...state, 
                 data: payload,
+                xAxis: payload.map((item) => item.hour),
                 isLoading: false
             };
         },

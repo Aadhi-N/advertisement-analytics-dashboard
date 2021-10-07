@@ -1,21 +1,25 @@
 import store from '../../../../store';
 
-export function getBarChartData () {
-    const state = store.getState();
-    // console.log('STATEEEEEEE', state)
 
+const state = store.getState();
+
+
+async function hello() {
+    return await [1, 2, 3]
 }
+
+console.log('HELOOO', state.revenueChartData.xAxis)
 // ===========================|| DASHBOARD - TOTAL REVENUE BAR CHART ||=========================== //
 
 
-const chartData = {    
+const revenueChartData = {    
     series: [{
-        name: 'Website Blog',
+        name: 'Total Revenue',
         type: 'column',
         data: [440, 505, 414, 671, 227, 413, 201, 352, 752, 320, 257, 160]
     }, 
     {
-        name: 'Social Media',
+        name: 'Total Clicks',
         type: 'line',
         data: [23, 42, 35, 27, 43, 22, 17, 31, 22, 22, 12, 16]
     }],
@@ -38,7 +42,8 @@ const chartData = {
         enabled: true,
         enabledOnSeries: [1]
     },
-    labels: ['01 Jan 2001', '02 Jan 2001', '03 Jan 2001', '04 Jan 2001', '05 Jan 2001', '06 Jan 2001', '07 Jan 2001', '08 Jan 2001', '09 Jan 2001', '10 Jan 2001', '11 Jan 2001', '12 Jan 2001'],
+    ///
+    labels: ['hour 1', 'hour 2'],
     xaxis: {
         type: 'datetime'
     },
@@ -58,4 +63,4 @@ const chartData = {
     },
 };
 
-export default chartData;
+export default revenueChartData;
