@@ -9,7 +9,7 @@ import { Grid } from '@material-ui/core';
 
 /* Components imports */
 import TotalEventsLineChartCard from './TotalEventsLineChartCard';
-import PopularCard from './PopularCard';
+import PopularLocationsCard from './PopularLocationsCard';
 import TotalClicksLineChartCard from './TotalClicksLineChartCard';
 import PopularImpressionsTimeDarkCard from './PopularImpressionsTimeDarkCard';
 import PopularClicksTimeLightCard from './PopularClicksTimeLightCard';
@@ -76,7 +76,7 @@ const Dashboard = () => {
                         <TotalGrowthBarChart isLoading={isLoading} />
                     </Grid>
                     <Grid item xs={12} md={4}>
-                        <PopularCard isLoading={isLoading} />
+                        <PopularLocationsCard isLoading={isLoading} />
                     </Grid>
                 </Grid>
             </Grid>

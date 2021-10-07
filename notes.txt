@@ -264,3 +264,81 @@ const useStyles = makeStyles((theme) => ({
         fontSize: '1.25rem'
     }
 }));
+
+
+
+
+// ///////////////////////////////////////////////////////////////////
+// app.get('/events/location', (req, res, next) => {
+//   req.sqlQuery = `
+//   SELECT date, i.poi_id, events
+//   FROM public.hourly_events i
+//   LEFT JOIN public.poi p ON p.poi_id = i.poi_id
+
+//   LIMIT 168;
+//   `
+//   return next()
+// }, queryHandler);
+
+
+
+
+/* Get date and/or hourly data using given params */
+// app.get('/events/map', (req, res, next) => {
+//   const dailyQuery = `
+//     SELECT date, SUM(events) as events, SUM(hour) as hour, i.poi_id, p.name, p.lat, p.lon
+//     FROM public.hourly_events i
+//     LEFT JOIN public.poi p ON p.poi_id = i.poi_id
+//     WHERE date='${req.query.date}'
+//     GROUP BY i.poi_id, i.date, p.name, p.lat, p.lon
+//   `;
+
+//   const hourlyQuery = `
+//     SELECT date, events, hour, i.poi_id
+//     FROM public.hourly_events i
+//     LEFT JOIN public.poi p ON p.poi_id = i.poi_id
+//     WHERE date='${req.query.date}' AND hour='${req.query.hourly}'
+//   `;
+
+//   if (req.query.hourly) {
+//      req.sqlQuery = hourlyQuery
+//   } else {
+//      req.sqlQuery = dailyQuery
+//   }  
+//   return next()
+// }, queryHandler)
+
+
+
+
+       <Divider className={classes.divider} />
+                                <Grid container direction="column">
+                                    <Grid item>
+                                        <Grid container alignItems="center" justifyContent="space-between">
+                                            <Grid item>
+                                                <Typography variant="subtitle1" color="inherit">
+                                                    Stolon
+                                                </Typography>
+                                            </Grid>
+                                            <Grid item>
+                                                <Grid container alignItems="center" justifyContent="space-between">
+                                                    <Grid item>
+                                                        <Typography variant="subtitle1" color="inherit">
+                                                            $189.00
+                                                        </Typography>
+                                                    </Grid>
+                                                    <Grid item>
+                                                        <Avatar variant="rounded" className={classes.avatarError}>
+                                                            <KeyboardArrowDownOutlinedIcon fontSize="small" color="inherit" />
+                                                        </Avatar>
+                                                    </Grid>
+                                                </Grid>
+                                            </Grid>
+                                        </Grid>
+                                    </Grid>
+                                    <Grid item>
+                                        <Typography variant="subtitle2" className={classes.errorDark}>
+                                            10% loss
+                                        </Typography>
+                                    </Grid>
+                                </Grid>

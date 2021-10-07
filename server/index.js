@@ -20,7 +20,22 @@ const queryHandler = (req, res, next) => {
   pool.query(req.sqlQuery).then((r) => {
     return res.json(r.rows || [])
   }).catch(next)
-}
+};
+
+// ===========================|| DASHBOARD CHART QUERIES ||=========================== //
+
+/* Two table joins - public.hourly_stats & public.hourly_events */
+app.get('/all', (req, res, next) => {
+  req.sqlQuery = `
+  SELECT * 
+  FROM public.hourly_stats i
+  LEFT JOIN public.hourly_events ON public.hourly_events.date = i.date
+  LEFT JOIN public.poi ON public.poi.poi_id = i.poi_id
+  ORDER BY i.date, i.hour
+  LIMIT 168;
+  `
+  return next()
+}, queryHandler);
 
 app.get('/events/hourly', (req, res, next) => {
   req.sqlQuery = `
@@ -182,60 +197,102 @@ app.get('/dashboard/charts/clicks/popular-time/monthly', (req, res, next) => {
 }, queryHandler);
 
 
+/* LOCATIONS METRICS - CHART */
+app.get('/dashboard/charts/locations/total-:metric/:timeline', (req, res, next) => {
+  switch (req.params.timeline) {
+    case "daily": 
+      switch(req.params.metric) {
+        case "revenue": case "clicks": case "impressions": 
+          req.sqlQuery = `
+            SELECT p.poi_id, p.name, p.lat, p.lon, i.date, SUM(i.${req.params.metric}) as ${req.params.metric}
+            FROM public.poi p
+            INNER JOIN public.hourly_stats i ON i.poi_id = p.poi_id
+            WHERE date = '2017-06-16'
+            GROUP BY p.poi_id, i.date
+            ORDER BY p.name ASC
+          `;
+        break;
 
-///////////////////////////////////////////////////////////////////
-app.get('/events/location', (req, res, next) => {
-  req.sqlQuery = `
-  SELECT date, i.poi_id, events
-  FROM public.hourly_events i
-  LEFT JOIN public.poi p ON p.poi_id = i.poi_id
+        case "events":
+          req.sqlQuery = `
+            SELECT p.poi_id, p.name, p.lat, p.lon, i.date, SUM(i.${req.params.metric}) as ${req.params.metric}
+            FROM public.poi p
+            INNER JOIN public.hourly_events i ON i.poi_id = p.poi_id
+            WHERE date = '2017-06-16'
+            GROUP BY p.poi_id, i.date
+            ORDER BY p.name ASC
+          `;
+        break;
 
-  LIMIT 168;
-  `
-  return next()
+        default: 
+          res.json({message: "Server error."})
+      };
+    break;
+
+    case "weekly": 
+      switch(req.params.metric) {
+        case "revenue": case "clicks": case "impressions": 
+          req.sqlQuery = `
+            SELECT p.poi_id, p.name, p.lat, p.lon, SUM(i.${req.params.metric}) as ${req.params.metric}
+            FROM public.poi p
+            INNER JOIN public.hourly_stats i ON i.poi_id = p.poi_id
+            WHERE '2017-06-09' <= date and date < '2017-06-16'
+            GROUP BY  p.poi_id 
+            ORDER BY p.name ASC     
+          `;
+        break;
+
+        case "events":
+          req.sqlQuery = `
+            SELECT p.poi_id, p.name, p.lat, p.lon, SUM(i.${req.params.metric}) as ${req.params.metric}
+            FROM public.poi p
+            INNER JOIN public.hourly_events i ON i.poi_id = p.poi_id
+            WHERE '2017-06-09' <= date and date < '2017-06-16'
+            GROUP BY  p.poi_id 
+            ORDER BY p.name ASC     
+          `;
+        break;
+
+        default: 
+          res.json({message: "Server error."})
+      }
+    break;
+      
+    case "monthly":
+      switch(req.params.metric) {
+        case "revenue": case "clicks": case "impressions": 
+          req.sqlQuery = `
+            SELECT p.poi_id, p.name, p.lat, p.lon, SUM(i.${req.params.metric}) as ${req.params.metric}
+            FROM public.poi p
+            INNER JOIN public.hourly_stats i ON i.poi_id = p.poi_id
+            WHERE '2017-06-01' <= date and date < '2017-07-01'
+            GROUP BY  p.poi_id     
+            ORDER BY p.name ASC 
+          `;
+        break;
+
+        case "events":
+          req.sqlQuery = `
+            SELECT p.poi_id, p.name, p.lat, p.lon, SUM(i.${req.params.metric}) as ${req.params.metric}
+            FROM public.poi p
+            INNER JOIN public.hourly_events i ON i.poi_id = p.poi_id
+            WHERE '2017-06-01' <= date and date < '2017-07-01'
+            GROUP BY  p.poi_id     
+            ORDER BY p.name ASC 
+          `;
+        break;
+
+        default: 
+          res.json({message: "Server error."})
+      }
+    break;
+    default: 
+      res.json({message: "Server error."})
+  };
+  return next();
 }, queryHandler);
 
 
-/* 2 TABLES: public.hourly_stats & public.hourly_events
-/* Select ALL events and stats, join both tables */
-app.get('/all', (req, res, next) => {
-  req.sqlQuery = `
-
-  SELECT * 
-  FROM public.hourly_stats i
-  LEFT JOIN public.hourly_events ON public.hourly_events.date = i.date
-  LEFT JOIN public.poi ON public.poi.poi_id = i.poi_id
-  ORDER BY i.date, i.hour
-  LIMIT 168;
-  `
-  return next()
-}, queryHandler);
-
-
-/* Get date and/or hourly data using given params */
-app.get('/events/map', (req, res, next) => {
-  const dailyQuery = `
-    SELECT date, SUM(events) as events, SUM(hour) as hour, i.poi_id, p.name, p.lat, p.lon
-    FROM public.hourly_events i
-    LEFT JOIN public.poi p ON p.poi_id = i.poi_id
-    WHERE date='${req.query.date}'
-    GROUP BY i.poi_id, i.date, p.name, p.lat, p.lon
-  `;
-
-  const hourlyQuery = `
-    SELECT date, events, hour, i.poi_id
-    FROM public.hourly_events i
-    LEFT JOIN public.poi p ON p.poi_id = i.poi_id
-    WHERE date='${req.query.date}' AND hour='${req.query.hourly}'
-  `;
-
-  if (req.query.hourly) {
-     req.sqlQuery = hourlyQuery
-  } else {
-     req.sqlQuery = dailyQuery
-  }  
-  return next()
-}, queryHandler)
 
 
 app.listen(process.env.PORT || 5555, (err) => {
