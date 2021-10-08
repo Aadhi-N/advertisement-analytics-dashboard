@@ -293,12 +293,11 @@ app.get('/dashboard/charts/locations/total-:metric/:timeline', (req, res, next) 
 }, queryHandler);
 
 /* REVENUE BAR CHART */
-app.get('/dashboard/charts/revenue/:timeline', (req, res, next) => {
-  console.log('params', req.params)
+app.get('/dashboard/charts/revenue-and-clicks/:timeline', (req, res, next) => {
   switch(req.params.timeline) {
     case "daily":
       req.sqlQuery = `
-        SELECT date, hour, SUM(revenue) as revenue
+        SELECT date, hour, SUM(revenue) as revenue, SUM(SUM(revenue)) OVER() as total_revenue, clicks
         FROM public.hourly_stats
         WHERE date = '2017-06-16'
         GROUP BY hour, date
@@ -308,21 +307,21 @@ app.get('/dashboard/charts/revenue/:timeline', (req, res, next) => {
 
     case "weekly":
       req.sqlQuery = `
-        SELECT date, hour, SUM(revenue) as revenue
+        SELECT date, SUM(revenue) as revenue, SUM(SUM(revenue)) OVER() as total_revenue, SUM(clicks) as clicks
         FROM public.hourly_stats
         WHERE '2017-06-09' <= date and date < '2017-06-16'
-        GROUP BY hour, date
-        ORDER BY hour    
+        GROUP BY date
+        ORDER BY date    
       `;
     break;
 
     case "monthly":
       req.sqlQuery = `
-        SELECT date, hour, SUM(revenue) as revenue
+        SELECT date, SUM(revenue) as revenue, SUM(SUM(revenue)) OVER() as total_revenue, SUM(clicks) as clicks
         FROM public.hourly_stats
         WHERE '2017-06-01' <= date and date < '2017-07-01'
-        GROUP BY hour, date
-        ORDER BY hour    
+        GROUP BY date
+        ORDER BY date      
       `;
     break;
     

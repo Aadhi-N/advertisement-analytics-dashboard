@@ -13,7 +13,7 @@ import { Grid, MenuItem, TextField, Typography, useTheme } from '@material-ui/co
 /* Chart imports */
 import ApexCharts from 'apexcharts';
 import Chart from 'react-apexcharts';
-import revenueChartData from './chart-data/total-revenue-bar-chart';
+import barChartData from './chart-data/total-revenue-bar-chart';
 
 /* Components imports */
 import Skeleton from 'ui-component/cards/Skeleton/TotalRevenueAndClicksBarChart.Skeleton';
@@ -36,7 +36,7 @@ const status = [
     }
 ];
 
-const revenueUrl = "http://localhost:5555/dashboard/charts/revenue/";
+const revenueUrl = "http://localhost:5555/dashboard/charts/revenue-and-clicks/";
 
 // ===========================|| DASHBOARD DEFAULT - TOTAL GROWTH BAR CHART ||=========================== //
 
@@ -53,49 +53,13 @@ const TotalRevenueAndClicksBarChart = ({ isLoading }) => {
     const secondaryLight = theme.palette.secondary.light;
     const grey500 = theme.palette.grey[500];
 
-    useEffect(() => {
-        const newChartData = {
-            ...revenueChartData.options,
-            colors: [primary200, primaryDark, secondaryMain, secondaryLight],
-            xaxis: {
-                labels: {
-                    style: {
-                        colors: [primary, primary, primary, primary, primary, primary, primary, primary, primary, primary, primary, primary]
-                    }
-                }
-            },
-            yaxis: {
-                labels: {
-                    style: {
-                        colors: [primary]
-                    }
-                }
-            },
-            grid: {
-                borderColor: grey200
-            },
-            tooltip: {
-                theme: 'light'
-            },
-            legend: {
-                labels: {
-                    colors: grey500
-                }
-            }
-        };
+    const totalRevenueForTimeline = useSelector(state => state.revenueChartData.totalRevenueForTimeline);
+    const xAxis = useSelector(state => state.revenueChartData.xAxis);
+    const sumRevenue = useSelector(state => state.revenueChartData.sumRevenue);
+    const sumClicks = useSelector(state => state.revenueChartData.sumClicks);
+   
+    console.log('totalRev', xAxis)
 
-        // do not load chart when loading
-        if (!isLoading) {
-            ApexCharts.exec(`bar-chart`, 'updateOptions', newChartData);
-        }
-    }, [primary200, primaryDark, secondaryMain, secondaryLight, primary, grey200, isLoading, grey500]);
-
-
-
-    const totalRevenue = useSelector(state => state.revenueChartData.data);
-    const xAxis = useSelector(state => state.revenueChartData.xAxis)
-
-    // console.log('XXXAXIS',  xAxis)
     const [timeValue, setTimeValue] = useState("daily");
     const dispatch = useDispatch();
 
@@ -108,7 +72,8 @@ const TotalRevenueAndClicksBarChart = ({ isLoading }) => {
         try {
             const response = await axios.get(revenueUrl + timeValue);
             if (response.status === 200) {
-                dispatch(actions.chartData(response.data))            
+                dispatch(actions.setTimeline(timeValue));
+                dispatch(actions.chartData(response.data, timeValue));           
             } else {
                 dispatch(actions.chartError(response.status))
             }
@@ -119,6 +84,59 @@ const TotalRevenueAndClicksBarChart = ({ isLoading }) => {
 
     useEffect(fetchEventData, [ timeValue, fetchEventData ]);
 
+////////////
+    useEffect(() => {
+        const newChartData = {
+            ...barChartData.options,
+            colors: [primary200, primaryDark, secondaryMain, secondaryLight],
+            series: [
+                { data: sumRevenue }, // Revenue bar data
+                { data: sumClicks } // Clicks line data 
+            ],
+            xaxis: {
+                type: 'category',
+                categories: xAxis,
+                labels: {
+                    style: {
+                        colors: [primary, primary, primary, primary, primary, primary, primary, primary, primary, primary, primary, primary]
+                    }
+                }
+            },
+            yaxis: {
+                labels: {
+                    formatter: function (value) {
+                        return "$" + value;
+                      },
+                    style: {
+                        colors: [primary]
+                    }
+                }
+            },
+            grid: {
+                borderColor: grey200
+            },
+            tooltip: {
+                theme: 'light',
+                y: {
+                    formatter: function(value, { series, seriesIndex, dataPointIndex, w }) {
+                        if (seriesIndex === 0) {
+                            return "$" + value
+                        } else { return value }
+                    }                    
+                }
+            },
+            legend: {
+                labels: {
+                    colors: grey500
+                }
+            }
+        };
+
+        // do not load chart when loading
+        if (!isLoading) {
+            ApexCharts.exec(`bar-chart`, 'updateOptions', newChartData);
+        }
+    }, [primary200, primaryDark, secondaryMain, secondaryLight, primary, grey200, isLoading, grey500, xAxis, sumClicks, sumRevenue]);
 
     return (
         <>
@@ -135,7 +153,7 @@ const TotalRevenueAndClicksBarChart = ({ isLoading }) => {
                                             <Typography variant="subtitle2">Total Revenue</Typography>
                                         </Grid>
                                         <Grid item>
-                                            <Typography variant="h3">$2,324.00</Typography>
+                                            <Typography variant="h3">${totalRevenueForTimeline}</Typography>
                                         </Grid>
                                     </Grid>
                                 </Grid>
@@ -156,7 +174,7 @@ const TotalRevenueAndClicksBarChart = ({ isLoading }) => {
                             </Grid>
                         </Grid>
                         <Grid item xs={12}>
-                            <Chart {...revenueChartData} />
+                            <Chart {...barChartData} />
                         </Grid>
                     </Grid>
                 </MainCard>
