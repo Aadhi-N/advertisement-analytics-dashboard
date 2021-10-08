@@ -11,11 +11,11 @@ import MainCard from 'ui-component/cards/MainCard';
 import SkeletonTotalEventsCard from 'ui-component/cards/Skeleton/EarningCard';
 
 /* Charts imports */
+import ApexCharts from 'apexcharts';
 import Chart from 'react-apexcharts';
 
 /* Chart data imports */
-import ChartDataMonth from './chart-data/total-order-month-line-chart';
-import ChartDataYear from './chart-data/total-order-year-line-chart';
+import totalEventsLineChart from './chart-data/total-events-line-chart';
 
 /* Material-UI imports */
 import { makeStyles } from '@material-ui/styles';
@@ -111,6 +111,23 @@ const TotalEventsLineChartCard = ({ isLoading }) => {
 
     /* Access redux store */
     const totalEvents = useSelector(state => state.eventChartData.eventChartData);
+    const xAxis = useSelector(state => state.revenueChartData.xAxis);
+
+    useEffect(() => {
+        const newChartData = {
+            ...totalEventsLineChart.options,
+            series: [
+                { data: [45, 66, 41, 89, 25, 44, 9, 54] },
+            ],
+            
+        };
+
+        // do not load chart when loading
+        if (!isLoading) {
+            ApexCharts.exec(`line-chart`, 'updateOptions', newChartData);
+        }
+    }, [isLoading, xAxis]);
+
 
     /* useCallback hook used to memoize previously fetched resuts. 
     When urlParams prop changes, function is called again to render Table component */
@@ -199,7 +216,7 @@ const TotalEventsLineChartCard = ({ isLoading }) => {
                                     </Grid>
                                 </Grid>
                                 <Grid item xs={6}>
-                                    {timeValue ? <Chart {...ChartDataMonth} /> : <Chart {...ChartDataYear} />}
+                                    <Chart {...totalEventsLineChart} />
                                 </Grid>
                             </Grid>
                         </Grid>

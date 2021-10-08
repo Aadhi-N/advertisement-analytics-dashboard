@@ -6,6 +6,7 @@ export const eventChartDataReducer = createSlice({
     name: 'eventChart',
     initialState: {
         eventChartData: [],
+        sumClicks: [],
         isLoading: true
     },
     reducers: {

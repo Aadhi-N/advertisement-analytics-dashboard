@@ -58,15 +58,12 @@ const TotalRevenueAndClicksBarChart = ({ isLoading }) => {
     const sumRevenue = useSelector(state => state.revenueChartData.sumRevenue);
     const sumClicks = useSelector(state => state.revenueChartData.sumClicks);
    
-    console.log('totalRev', xAxis)
-
     const [timeValue, setTimeValue] = useState("daily");
     const dispatch = useDispatch();
 
     const handleChangeTime = (val) => {
         setTimeValue(val);
     };
-
 
     const fetchEventData = useCallback(async () => {
         try {
@@ -84,7 +81,6 @@ const TotalRevenueAndClicksBarChart = ({ isLoading }) => {
 
     useEffect(fetchEventData, [ timeValue, fetchEventData ]);
 
-////////////
     useEffect(() => {
         const newChartData = {
             ...barChartData.options,
