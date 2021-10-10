@@ -85,7 +85,12 @@ const Dashboard = () => {
             <Grid item xs={12}>            
                 <Grid container spacing={gridSpacing}>
                     <Grid item xs={12} md={12} sm={12} lg={12}>
-                    <MapContainer />
+                    </Grid>
+                </Grid>
+                <Grid container spacing={gridSpacing}>
+                    <Grid item xs={12} md={12} sm={12} lg={12}>
+                        
+                        <MapContainer />
                     </Grid>
                 </Grid>
             </Grid>
